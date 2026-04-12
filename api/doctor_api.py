@@ -8,16 +8,11 @@ import pandas as pd
 from flask import Flask, request, jsonify
 import json
 import warnings
-from pathlib import Path
 
 warnings.filterwarnings('ignore')
 
 # Initialize Flask
 app = Flask(__name__)
-
-BASE_DIR = Path(__file__).resolve().parent
-MODEL_PATH = BASE_DIR / 'models' / 'doctor_ai_full_package.pkl'
-DATA_PATH = BASE_DIR / 'data' / 'Dr.Seba_500_Organized_Final.xlsx'
 
 # Enforce CORS at WSGI level so every response includes required headers.
 class CORSMiddleware:
@@ -44,7 +39,7 @@ def handle_preflight(path):
 
 # Load ML Model and Encoders
 print("[STARTUP] Loading ML Model...")
-with open(MODEL_PATH, 'rb') as f:
+with open('doctor_ai_full_package.pkl', 'rb') as f:
     package = pk.load(f)
 
 model = package["model"]
@@ -56,7 +51,7 @@ print("[STARTUP] ✅ ML Model loaded!")
 
 # Load Dataset
 print("[STARTUP] Loading Dataset...")
-df = pd.read_excel(DATA_PATH)
+df = pd.read_excel("Dr.Seba_500_Organized_Final.xlsx")
 df.columns = df.columns.str.strip().str.lower().str.replace(" ", "_")
 
 # Convert Yes/No to 1/0

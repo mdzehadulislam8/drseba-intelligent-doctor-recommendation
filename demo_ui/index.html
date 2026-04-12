@@ -29,70 +29,81 @@
             <aside class="search-panel">
                 <div class="search-container">
                     <h2>🔍 Search Criteria</h2>
-                    
-                    <div class="form-group">
-                        <label for="district">📍 District</label>
-                        <select id="district" required>
-                            <option value="">-- Select District --</option>
-                        </select>
-                    </div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="district">📍 District</label>
+                            <select id="district" name="district" required>
+                                <option value="">-- Select District --</option>
+                                {% for district in districts %}
+                                <option value="{{ district }}" {% if district == selected_district %}selected{% endif %}>{{ district }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="thana">🏘️ Thana/Area</label>
-                        <select id="thana" required>
-                            <option value="">-- Select Thana --</option>
-                        </select>
-                    </div>
+                        <div class="form-group">
+                            <label for="thana">🏘️ Thana/Area</label>
+                            <select id="thana" name="thana" required>
+                                <option value="">-- Select Thana --</option>
+                                {% for thana in thanas %}
+                                <option value="{{ thana }}" {% if thana == selected_thana %}selected{% endif %}>{{ thana }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="specialization">👨‍⚕️ Specialization</label>
-                        <select id="specialization" required>
-                            <option value="">-- Select Specialization --</option>
-                        </select>
-                    </div>
+                        <div class="form-group">
+                            <label for="specialization">👨‍⚕️ Specialization</label>
+                            <select id="specialization" name="specialization" required>
+                                <option value="">-- Select Specialization --</option>
+                                {% for spec in specializations %}
+                                <option value="{{ spec }}" {% if spec == selected_spec %}selected{% endif %}>{{ spec }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="maxFee">💳 Max Consultation Fee (৳)</label>
-                        <input type="number" id="maxFee" value="2000" min="0" required>
-                        <small>Maximum amount you're willing to pay</small>
-                    </div>
+                        <div class="form-group">
+                            <label for="maxFee">💳 Max Consultation Fee (৳)</label>
+                            <input type="number" id="maxFee" name="maxFee" value="{{ max_fee|default:'2000' }}" min="0" required>
+                            <small>Maximum amount you're willing to pay</small>
+                        </div>
 
-                    <div class="form-group checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="online">
-                            <span>💻 Online Consultation Available</span>
-                        </label>
-                    </div>
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="online" name="online" {% if online %}checked{% endif %}>
+                                <span>💻 Online Consultation Available</span>
+                            </label>
+                        </div>
 
-                    <div class="form-group checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="emergency">
-                            <span>🚨 Emergency Service Available</span>
-                        </label>
-                    </div>
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="emergency" name="emergency" {% if emergency %}checked{% endif %}>
+                                <span>🚨 Emergency Service Available</span>
+                            </label>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="topN">📊 Number of Results</label>
-                        <input type="number" id="topN" value="5" min="1" max="20">
-                    </div>
+                        <div class="form-group">
+                            <label for="topN">📊 Number of Results</label>
+                            <input type="number" id="topN" name="topN" value="{{ top_n|default:'5' }}" min="1" max="20">
+                        </div>
 
-                    <button id="searchBtn" class="search-btn">
-                        <span>🔍 Search Doctors</span>
-                    </button>
+                        <button id="searchBtn" type="submit" class="search-btn">
+                            <span>🔍 Search Doctors</span>
+                        </button>
 
-                    <div id="apiStatus" class="api-status">
-                        <div class="status-indicator loading"></div>
-                        <span id="statusText">Connecting to API...</span>
-                    </div>
+                        <div id="apiStatus" class="api-status">
+                            <div class="status-indicator"></div>
+                            <span id="statusText">Powered by Django backend</span>
+                        </div>
+                    </form>
                 </div>
             </aside>
 
             <!-- Right Column - Results -->
             <main class="results-panel">
                 <!-- Error Message -->
-                <div id="errorMessage" class="error-message hidden">
+                <div id="errorMessage" class="error-message {% if not error %}hidden{% endif %}">
                     <span class="error-icon">❌</span>
-                    <span id="errorText"></span>
+                    <span id="errorText">{{ error }}</span>
                 </div>
 
                 <!-- Loading Indicator -->
@@ -107,25 +118,69 @@
                 </div>
 
                 <!-- No Results -->
-                <div id="noResults" class="no-results hidden">
+                <div id="noResults" class="no-results {% if searched and not doctors and not error %}{% else %}hidden{% endif %}">
                     <div class="no-results-icon">😢</div>
                     <h3>No doctors found</h3>
                     <p>Try adjusting your search criteria</p>
                 </div>
 
                 <!-- Results Section -->
-                <section id="resultsSection" class="results-section hidden">
+                <section id="resultsSection" class="results-section {% if doctors %}{% else %}hidden{% endif %}">
                     <div class="results-header">
                         <h2>
-                            <span id="resultCount">0</span> Doctors Found
+                            <span id="resultCount">{{ doctors|length }}</span> Doctors Found
                         </h2>
                         <p>Ranked by AI Quality Score</p>
                     </div>
-                    <div id="results" class="results-container"></div>
+                    <div id="results" class="results-container">
+                        {% for doctor in doctors %}
+                        <div class="doctor-card">
+                            <div class="doctor-rank">
+                                <div class="rank-badge">#{{ forloop.counter }}</div>
+                                <div class="doctor-name">
+                                    <h3>{{ doctor.doctor_name }}</h3>
+                                    <div class="doctor-spec">{{ doctor.specialization|default:'General Practice' }}</div>
+                                </div>
+                            </div>
+
+                            <div class="doctor-info">
+                                <div class="info-item">
+                                    <div class="info-label">Rating</div>
+                                    <div class="info-value rating">⭐ {{ doctor.rating_avg|floatformat:1 }}/5.0</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Experience</div>
+                                    <div class="info-value">{{ doctor.experience_years }} years</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Consultation Fee</div>
+                                    <div class="info-value">৳{{ doctor.consultation_fees }}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Quality Score</div>
+                                    <div class="info-value">{{ doctor.predicted_score|floatformat:4 }}</div>
+                                </div>
+                            </div>
+
+                            {% if doctor.predicted_score > 1.5 %}
+                            <div class="score-badge score-excellent">Quality: Excellent ({{ doctor.predicted_score|floatformat:4 }})</div>
+                            {% elif doctor.predicted_score > 1.0 %}
+                            <div class="score-badge score-good">Quality: Good ({{ doctor.predicted_score|floatformat:4 }})</div>
+                            {% else %}
+                            <div class="score-badge score-fair">Quality: Fair ({{ doctor.predicted_score|floatformat:4 }})</div>
+                            {% endif %}
+
+                            <div class="hospital-info">
+                                <div class="hospital-name">🏥 {{ doctor.hospital_name }}</div>
+                                <div class="full-address">📍 {{ doctor.full_address }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </section>
 
                 <!-- Empty State -->
-                <div id="emptyState" class="empty-state">
+                <div id="emptyState" class="empty-state {% if searched or doctors %}hidden{% endif %}">
                     <div class="empty-icon">👨‍⚕️</div>
                     <h3>Welcome to Doctor Search</h3>
                     <p>Fill in your search criteria and click "Search Doctors"</p>
@@ -142,9 +197,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p>🏥 Doctor Recommendation System powered by AI | API: <code>localhost:5000</code></p>
+        <p>🏥 Doctor Recommendation System powered by AI | Backend: <code>Django</code></p>
     </footer>
-
-    <script src="script.js"></script>
 </body>
 </html>

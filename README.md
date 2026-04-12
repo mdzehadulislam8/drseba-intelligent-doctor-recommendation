@@ -39,27 +39,27 @@ Add your real metrics here before publishing:
 
 ## Run Instructions (Input to Output)
 
+**Django is now the unified backend.** Flask files have been archived to `legacy/`.
+
 ### 1) Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2) Start API
+### 2) Run Django server
 ```bash
-python doctor_api.py
+python manage.py runserver
 ```
 
-### 3) Start demo UI (new terminal)
-```bash
-python run_frontend.py
-```
-
-### 4) Open in browser
+### 3) Open in browser
 ```text
-http://localhost:7777
+http://127.0.0.1:8000/
 ```
 
-You can now give input filters in the UI and get ranked doctor recommendations as output.
+### 4) Use the application
+- Select District, Thana, Specialization, and filter preferences
+- Click "🔍 Search Doctors"
+- View AI-ranked recommendations by predicted quality score
 
 ## Notebook Usage
 
@@ -94,5 +94,7 @@ Co-authored-by: Teacher Name <teacher-email@example.com>
 - Avoid secrets/credentials in repository
 
 ## Notes
-- `doctor_api.py` is path-updated to load from `models/` and `data/`
-- `run_frontend.py` is path-updated to serve from `demo_ui/`
+- Django v2 is the current production-ready implementation
+- Legacy Flask files (`doctor_api.py`, `run_frontend.py`) moved to `legacy/` folder for reference
+- See [legacy/README.md](legacy/README.md) for v1 architecture details
+- The project follows Django best practices with `drseba_platform` as project and `recommender` as app
