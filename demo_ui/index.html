@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏥 Doctor Recommendation System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>⚕️</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>🏥 Doctor Recommendation System</h1>
+                    <p>AI-Powered Doctor Search with Quality Prediction</p>
+                </div>
+                <div class="header-badge">
+                    <span class="badge">500+ Doctors</span>
+                    <span class="badge">ML Powered</span>
+                    <span class="badge">Real-time</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- Left Column - Search Form -->
+            <aside class="search-panel">
+                <div class="search-container">
+                    <h2>🔍 Search Criteria</h2>
+                    
+                    <div class="form-group">
+                        <label for="district">📍 District</label>
+                        <select id="district" required>
+                            <option value="">-- Select District --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="thana">🏘️ Thana/Area</label>
+                        <select id="thana" required>
+                            <option value="">-- Select Thana --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="specialization">👨‍⚕️ Specialization</label>
+                        <select id="specialization" required>
+                            <option value="">-- Select Specialization --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="maxFee">💳 Max Consultation Fee (৳)</label>
+                        <input type="number" id="maxFee" value="2000" min="0" required>
+                        <small>Maximum amount you're willing to pay</small>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="online">
+                            <span>💻 Online Consultation Available</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="emergency">
+                            <span>🚨 Emergency Service Available</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="topN">📊 Number of Results</label>
+                        <input type="number" id="topN" value="5" min="1" max="20">
+                    </div>
+
+                    <button id="searchBtn" class="search-btn">
+                        <span>🔍 Search Doctors</span>
+                    </button>
+
+                    <div id="apiStatus" class="api-status">
+                        <div class="status-indicator loading"></div>
+                        <span id="statusText">Connecting to API...</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Right Column - Results -->
+            <main class="results-panel">
+                <!-- Error Message -->
+                <div id="errorMessage" class="error-message hidden">
+                    <span class="error-icon">❌</span>
+                    <span id="errorText"></span>
+                </div>
+
+                <!-- Loading Indicator -->
+                <div id="loading" class="loading-container hidden">
+                    <div class="spinner"></div>
+                    <p>Searching for best doctors...</p>
+                    <div class="progress-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+
+                <!-- No Results -->
+                <div id="noResults" class="no-results hidden">
+                    <div class="no-results-icon">😢</div>
+                    <h3>No doctors found</h3>
+                    <p>Try adjusting your search criteria</p>
+                </div>
+
+                <!-- Results Section -->
+                <section id="resultsSection" class="results-section hidden">
+                    <div class="results-header">
+                        <h2>
+                            <span id="resultCount">0</span> Doctors Found
+                        </h2>
+                        <p>Ranked by AI Quality Score</p>
+                    </div>
+                    <div id="results" class="results-container"></div>
+                </section>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="empty-state">
+                    <div class="empty-icon">👨‍⚕️</div>
+                    <h3>Welcome to Doctor Search</h3>
+                    <p>Fill in your search criteria and click "Search Doctors"</p>
+                    <ul class="features-list">
+                        <li>✓ 500+ qualified doctors</li>
+                        <li>✓ AI-powered quality scoring</li>
+                        <li>✓ Real-time recommendations</li>
+                        <li>✓ Comprehensive doctor information</li>
+                    </ul>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>🏥 Doctor Recommendation System powered by AI | API: <code>localhost:5000</code></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
