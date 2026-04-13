@@ -450,7 +450,7 @@ See `requirements.txt` for full list:
 For issues, questions, or collaboration:
 - 📚 **API Issues**: Review **[DEVELOPER_API_GUIDE.md](DEVELOPER_API_GUIDE.md)** for API details
 - 🚀 **Setup Issues**: Check **[HOW_TO_RUN.md](HOW_TO_RUN.md)** for setup issues
-- 👤 **Mentor & Lead**: [Nusrat Jahan](https://github.com/Nusrat-96) — [nusratadiba88@gmail.com](mailto:nusratadiba88@gmail.com)
+- 👤 **Mentor**: [Nusrat Jahan](https://github.com/Nusrat-96) — [nusratadiba88@gmail.com](mailto:nusratadiba88@gmail.com)
 
 ---
 
