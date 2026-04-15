@@ -81,14 +81,13 @@
                             </label>
                         </div>
 
-                        <div class="form-group">
-                            <label for="topN">📊 Number of Results</label>
-                            <input type="number" id="topN" name="topN" value="{{ top_n|default:'5' }}" min="1" max="20">
-                        </div>
-
                         <button id="searchBtn" type="submit" class="search-btn">
                             <span>🔍 Search Doctors</span>
                         </button>
+
+                        {% if doctors|length > 4 %}
+                        <button id="seeMoreBtn" type="button" class="see-more-btn see-more-input-btn">See more</button>
+                        {% endif %}
 
                         <div id="apiStatus" class="api-status">
                             <div class="status-indicator"></div>
@@ -199,5 +198,30 @@
     <footer class="footer">
         <p>🏥 Doctor Recommendation System powered by AI | Backend: <code>Django</code></p>
     </footer>
+
+    <script>
+        (function () {
+            var cards = Array.prototype.slice.call(document.querySelectorAll('.results-container .doctor-card'));
+            var seeMoreBtn = document.getElementById('seeMoreBtn');
+            var initialVisible = 4;
+
+            if (!cards.length || !seeMoreBtn) {
+                return;
+            }
+
+            cards.forEach(function (card, index) {
+                if (index >= initialVisible) {
+                    card.classList.add('doctor-card-hidden');
+                }
+            });
+
+            seeMoreBtn.addEventListener('click', function () {
+                cards.forEach(function (card) {
+                    card.classList.remove('doctor-card-hidden');
+                });
+                seeMoreBtn.classList.add('hidden');
+            });
+        })();
+    </script>
 </body>
 </html>

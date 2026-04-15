@@ -63,7 +63,7 @@ def get_thanas_for_district(district):
     return sorted(df[df['district'] == district]['thana'].unique().tolist())
 
 
-def get_recommendations(user_input, top_n=5):
+def get_recommendations(user_input, top_n=None):
     runtime = get_runtime()
     df = runtime['df']
     model = runtime['model']
@@ -120,7 +120,10 @@ def get_recommendations(user_input, top_n=5):
             'hospital_name',
             'full_address',
         ]
-    ].head(top_n)
+    ]
+
+    if top_n is not None:
+        top_doctors = top_doctors.head(top_n)
 
     recommendations = []
     for _, row in top_doctors.iterrows():
@@ -158,7 +161,7 @@ def home(request):
     max_fee = request.POST.get('maxFee', '2000')
     online = request.POST.get('online') == 'on'
     emergency = request.POST.get('emergency') == 'on'
-    top_n = request.POST.get('topN', '5')
+    top_n = None
 
     context = {
         'districts': options['districts'],
@@ -179,12 +182,6 @@ def home(request):
     if request.method == 'POST':
         context['searched'] = True
         try:
-            top_n_int = int(top_n)
-            if top_n_int < 1:
-                top_n_int = 1
-            if top_n_int > 20:
-                top_n_int = 20
-
             max_fee_int = int(max_fee)
             if max_fee_int < 0:
                 max_fee_int = 0
@@ -197,7 +194,7 @@ def home(request):
                 'online': 1 if online else 0,
                 'emergency': 1 if emergency else 0,
             }
-            result = get_recommendations(payload, top_n_int)
+            result = get_recommendations(payload, top_n)
             if result.get('success'):
                 context['doctors'] = result['doctors']
             else:

@@ -380,6 +380,34 @@ body {
     gap: 20px;
 }
 
+.doctor-card-hidden {
+    display: none;
+}
+
+.see-more-btn {
+    display: block;
+    margin: 24px auto 0;
+    padding: 10px 22px;
+    border: 2px solid var(--primary);
+    border-radius: 999px;
+    background: white;
+    color: var(--primary);
+    font-size: 0.95em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.see-more-btn:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.see-more-input-btn {
+    width: 100%;
+    margin-top: 12px;
+}
+
 /* ================== DOCTOR CARD ================== */
 .doctor-card {
     background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
